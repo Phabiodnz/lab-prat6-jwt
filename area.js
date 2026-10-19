@@ -1,8 +1,10 @@
 const tokenFake =
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzLCJuYW1lIjoiRW5nLiBDb21wdXRhXHUwMGU3XHUwMGUzbyIsInJvbGUiOiJKV1QiLCJpYXQiOjE3NTk5ODEzMTcsImV4cCI6MTc1OTk4NDkxN30.b1KfcSFInRwYnvRA0Ae5jYuL59KZmCsufPgISNGq0X0";
-
 const token = localStorage.getItem("token");
-const secret = document.getElementById("secret-message");
+
+const secretDiv = document.getElementById("secret-div");
+const deniedDiv = document.getElementById("denied-div");
+const btnReturn = document.getElementById("btn-return");
 
 // Decodifica Base64URL
 function decodeBase64Url(str) {
@@ -16,11 +18,6 @@ function decodeBase64Url(str) {
 
 // Validação do Token
 function validateJWT(token) {
-    // Verifica se o token não existe
-    if (token === null || token === undefined) {
-        return false;
-    }
-
     // Verifica se o token é uma string ou se tá vazio
     if (typeof token !== "string" || token.trim() === "") {
         return false;
@@ -65,10 +62,33 @@ function validateJWT(token) {
 
 function showSecretMessage() {
     if (validateJWT(token)) {
-        secret.textContent = "MY-SECRET-KEY";
+        const h1 = document.createElement("h1");
+        const p = document.createElement("p");
+        const img = document.createElement("img");
+
+        h1.textContent = "MY-SECRET-KEY";
+        p.textContent = "Esse é um conteúdo disponível apenas para quem está efetivado (token correto)";
+        img.src = "./img/cat.jpg";
+        img.alt = "Meme de gato divertido";
+
+        secretDiv.appendChild(h1);
+        secretDiv.appendChild(p);
+        secretDiv.appendChild(img);
     } else {
-        secret.textContent = "ACESSO NEGADO";
+        const h1 = document.createElement("h1");
+        const p = document.createElement("p");
+
+        h1.textContent = "ACESSO NEGADO";
+        p.textContent = "Por favor, efetue o login e tente novamente";
+
+        deniedDiv.appendChild(h1);
+        deniedDiv.appendChild(p);
     }
 }
+
+btnReturn.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.replace("index.html");
+});
 
 showSecretMessage();
